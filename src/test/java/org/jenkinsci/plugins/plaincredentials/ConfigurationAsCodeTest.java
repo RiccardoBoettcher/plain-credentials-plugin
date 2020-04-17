@@ -32,4 +32,15 @@ public class ConfigurationAsCodeTest {
         assertEquals("my-secret-file", credentials.getFileName());
         assertEquals("FOO_BAR", IOUtils.toString(credentials.getContent()));
     }
+
+    @Test
+    @ConfiguredWithCode("ConfigurationAsCode-StringCredentials.yaml")
+    public void should_configure_string_credentials() throws Exception {
+        StringCredentials credentials = CredentialsMatchers.firstOrNull(
+                CredentialsProvider.lookupCredentials(StringCredentials.class, j.jenkins, ACL.SYSTEM, (DomainRequirement) null),
+                CredentialsMatchers.withId("secret-text-1"));
+        assertNotNull(credentials);
+        assertEquals("secret-text-description", credentials.getDescription());
+        assertEquals("very-secret", credentials.getSecret().getPlainText());
+    }
 }
