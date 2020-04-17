@@ -14,6 +14,7 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl;
 import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl;
+import org.jenkinsci.plugins.plaincredentials.impl.BasicStringCredentials;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,7 +54,14 @@ public class BaseTest {
         StringCredentialsImpl updatedCredential = new StringCredentialsImpl(credential.getScope(), UPDATED_CRED_ID, credential.getDescription(), credential.getSecret()); 
         testCreateUpdateDelete(credential, updatedCredential);
     }
-    
+
+    @Test
+    public void basicSecretTextBaseTest() throws IOException {
+        BasicStringCredentials credential = new BasicStringCredentials(CredentialsScope.GLOBAL, CRED_ID, "Test Secret Text", "password");
+        BasicStringCredentials updatedCredential = new BasicStringCredentials(credential.getScope(), UPDATED_CRED_ID, credential.getDescription(), "password");
+        testCreateUpdateDelete(credential, updatedCredential);
+    }
+
     @Test
     public void secretFileBaseTest() throws IOException, URISyntaxException {
         secretFileTest(false);
@@ -123,7 +131,6 @@ public class BaseTest {
     /**
      * Creates an empty FileItem for testing purposes
      * 
-     * @param fileName
      * @return
      * @throws URISyntaxException
      * @throws FileNotFoundException
